@@ -65,6 +65,7 @@ function getMonday7pmSGT() {
 function scheduleTask() {
     var now = new Date();
     var timeUntilNext7amSGT = getMonday7pmSGT();
+    const frequency = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
     var countryQuestionsMap = new Map([
         ["Singapore", [1, 2, 3]],
         ["USA", [1, 2, 3]],
