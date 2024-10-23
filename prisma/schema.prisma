@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Region {
+  id           Int           @id @default(autoincrement())
+  name         String
+  code         String        @unique
+  timeZone     String
+  questions    Question[]
+  configuration Configuration?
+  assignments  Assignment[]
+}
+
+model Question {
+  id         Int      @id @default(autoincrement())
+  content    String
+  orderIndex Int
+  region     Region   @relation(fields: [regionId], references: [id])
+  regionId   Int
+  assignments Assignment[]
+}
+
+model Configuration {
+  id              Int      @id @default(autoincrement())
+  cycleDuration   Int
+  cycleStartDay   Int
+  cycleStartHour  Int
+  cycleStartMinute Int
+  region          Region   @relation(fields: [regionId], references: [id])
+  regionId        Int      @unique
+}
+
+model Assignment {
+  id         Int      @id @default(autoincrement())
+  cycleStart DateTime
+  cycleEnd   DateTime
+  region     Region   @relation(fields: [regionId], references: [id])
+  regionId   Int
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+}
